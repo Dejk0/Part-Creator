@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Part_Creator.Properties {
+namespace Shaft.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

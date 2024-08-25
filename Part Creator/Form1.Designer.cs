@@ -1,4 +1,4 @@
-﻿namespace Part_Creator
+﻿namespace Shaft
 {
     partial class Form1
     {

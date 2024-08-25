@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
-namespace Part_Creator
+namespace Shaft
 {
     public partial class Form1 : Form
     {
@@ -40,14 +40,14 @@ namespace Part_Creator
             double vall2 = double.Parse(textBox5.Text);
             double vall3 = double.Parse(textBox4.Text);
 
-            Part_Creator.Form1.atm1 = comboBox1.SelectedIndex;
-            Part_Creator.Form1.atm2 = comboBox2.SelectedIndex;
+            Shaft.Form1.atm1 = comboBox1.SelectedIndex;
+            Shaft.Form1.atm2 = comboBox2.SelectedIndex;
 
             //string[] values = textBox1.Text.Split('.'); // Válassza szét a sorokat vesszők mentén
             //string[] values2 = textBox3.Text.Split('.'); // Válassza szét a sorokat vesszők mentén
 
-            Part_Creator.Form1.chamfer1 = double.Parse(comboBox3.SelectedItem.ToString());
-            Part_Creator.Form1.chamfer2 = double.Parse(comboBox4.SelectedItem.ToString());
+            Shaft.Form1.chamfer1 = double.Parse(comboBox3.SelectedItem.ToString());
+            Shaft.Form1.chamfer2 = double.Parse(comboBox4.SelectedItem.ToString());
             SE_DT DT = new SE_DT();
             DT.application = (SolidEdgeFramework.Application)
                 Marshal.GetActiveObject("SolidEdge.Application");
@@ -85,7 +85,7 @@ namespace Part_Creator
                     csvDataList.Add(values); // Adjuk hozzá az értékeket a listához
                 }                
             }
-            Part_Creator.Form1.csvDataList = csvDataList;
+            Shaft.Form1.csvDataList = csvDataList;
             comboBox1.SelectedIndex = 17;
             comboBox2.SelectedIndex = 18;
 

@@ -21,7 +21,7 @@ using System.Data;
 using System.IO;
 
 
-namespace Part_Creator
+namespace Shaft
 {
     public class SE_DT
     {
@@ -190,25 +190,25 @@ namespace Part_Creator
 
 
 
-            List<string[]> csvDataList = Part_Creator.Form1.csvDataList;
-            double d1 = double.Parse(csvDataList[Part_Creator.Form1.atm1][0]) / 1000;
-            double s = double.Parse(csvDataList[Part_Creator.Form1.atm1][1]) / 1000;
-            double a = double.Parse(csvDataList[Part_Creator.Form1.atm1][2]) / 1000;
-            double b = double.Parse(csvDataList[Part_Creator.Form1.atm1][3]) / 1000;
-            double d2 = double.Parse(csvDataList[Part_Creator.Form1.atm1][4]) / 2000;
-            double m = double.Parse(csvDataList[Part_Creator.Form1.atm1][5]) / 1000;
-            double n = double.Parse(csvDataList[Part_Creator.Form1.atm1][6]) / 1000;
+      List<string[]> csvDataList = global::Shaft.Form1.csvDataList;
+            double d1 = double.Parse(csvDataList[global::Shaft.Form1.atm1][0]) / 1000;
+            double s = double.Parse(csvDataList[global::Shaft.Form1.atm1][1]) / 1000;
+            double a = double.Parse(csvDataList[global::Shaft.Form1.atm1][2]) / 1000;
+            double b = double.Parse(csvDataList[global::Shaft.Form1.atm1][3]) / 1000;
+            double d2 = double.Parse(csvDataList[global::Shaft.Form1.atm1][4]) / 2000;
+            double m = double.Parse(csvDataList[global::Shaft.Form1.atm1][5]) / 1000;
+            double n = double.Parse(csvDataList[global::Shaft.Form1.atm1][6]) / 1000;
 
-            double d12 = double.Parse(csvDataList[Part_Creator.Form1.atm2][0]) / 1000;
-            double s2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][1]) / 1000;
-            double a2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][2]) / 1000;
-            double b2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][3]) / 1000;
-            double d22 = double.Parse(csvDataList[Part_Creator.Form1.atm2][4]) / 2000;
-            double m2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][5]) / 1000;
-            double n2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][6]) / 1000;
+            double d12 = double.Parse(csvDataList[global::Shaft.Form1.atm2][0]) / 1000;
+            double s2 = double.Parse(csvDataList[global::Shaft.Form1.atm2][1]) / 1000;
+            double a2 = double.Parse(csvDataList[global::Shaft.Form1.atm2][2]) / 1000;
+            double b2 = double.Parse(csvDataList[global::Shaft.Form1.atm2][3]) / 1000;
+            double d22 = double.Parse(csvDataList[global::Shaft.Form1.atm2][4]) / 2000;
+            double m2 = double.Parse(csvDataList[global::Shaft.Form1.atm2][5]) / 1000;
+            double n2 = double.Parse(csvDataList[global::Shaft.Form1.atm2][6]) / 1000;
 
-            double chamfer1 = Part_Creator.Form1.chamfer1 / 1000;
-            double chamfer2 = Part_Creator.Form1.chamfer2 / 1000;
+            double chamfer1 = global::Shaft.Form1.chamfer1 / 1000;
+            double chamfer2 = global::Shaft.Form1.chamfer2 / 1000;
             List<double[]> coordinates = new List<double[]>();
 
             coordinates.Add(new double[] { 0, 0, 0, diameter1 - chamfer1 });
