@@ -1,0 +1,175 @@
+public void CreatingRelations(SolidEdgeFrameworkSupport.Relations2d relations2dToCreat, SolidEdgeFrameworkSupport.Relation2d relation2dToCreat, SolidEdgePart.Profile profileForRelations)
+        {
+            // Define Relations among the Line objects to make the Profile closed
+            relations2dToCreat = (SolidEdgeFrameworkSupport.Relations2d)
+              profileForRelations.Relations2d;
+            for (int i=0; i<lines2d.Count-1; i++){
+                relation2dToCreat = relations2dToCreat.AddKeypoint(
+             lines2d.Item(i+1),
+             (int)KeypointIndexConstants.igLineEnd,
+             lines2d.Item(i+2),
+             (int)KeypointIndexConstants.igLineStart,
+             true);
+            }
+            relation2dToCreat = relations2dToCreat.AddKeypoint(
+             lines2d.Item(lines2d.Count),
+             (int)KeypointIndexConstants.igLineEnd,
+             lines2d.Item(1),
+             (int)KeypointIndexConstants.igLineStart,
+             true);
+
+        }
+       
+        public void Cube(double x, double y, double z)
+        {
+            StartingData();
+
+           //ide majd át kell írni a pályát másik algoritmusba
+            lines2d.AddBy2Points(x_Coordinate, x_Coordinate,x_Coordinate+x/1000, y_Coordinate);
+            lines2d.AddBy2Points(x_Coordinate+x / 1000, y_Coordinate, x_Coordinate+x / 1000, y_Coordinate+y / 1000);
+            lines2d.AddBy2Points(x_Coordinate+x / 1000, y_Coordinate+y / 1000, x_Coordinate, y_Coordinate+y / 1000);
+            lines2d.AddBy2Points(x_Coordinate, y_Coordinate+y / 1000, x_Coordinate, y_Coordinate);
+            CreatingRelations(relations2d,relation2d,profile);
+            CloseProfile(profile);
+            // Hide the profile
+            profile.Visible = false;
+            CreatingTheProfile(aProfiles, profile);            
+            ModellReferenc(models, part);            
+            Extrude(200, aProfiles);
+        }
+        public void StartingData()
+        {
+                      
+            // Get a reference to the profile sets collection
+            profileSets = part.ProfileSets;
+
+            // Add a new profile set
+            profileSet = profileSets.Add();
+
+            // Get a reference to the profiles collection
+            profiles = profileSet.Profiles;
+
+            // Get a reference to the ref planes collection
+            refplanes = part.RefPlanes;
+
+            // Add a new profile
+            profile = profiles.Add(refplanes.Item(3));
+
+            // Get a reference to the lines2d collection
+            lines2d = profile.Lines2d;
+        }
+        public void CloseProfile(SolidEdgePart.Profile profileToClose)
+        {
+            // Close the profile
+            profileToClose.End(SolidEdgePart.ProfileValidationType.igProfileClosed );
+        }
+        public void CreatingTheProfile(System.Array arrayToCreatProfile, SolidEdgePart.Profile profileToCreat)
+        {
+            // Create a new array of profile objects
+            arrayToCreatProfile = Array.CreateInstance(typeof(SolidEdgePart.Profile),1);
+            arrayToCreatProfile.SetValue(profileToCreat, 0);
+        }
+        public void ModellReferenc(SolidEdgePart.Models modelsToRef, SolidEdgePart.PartDocument partToRef)
+        {            
+            modelsToRef = partToRef.Models;
+        }
+        public void Extrude(double extrude, System.Array arrayToRef)
+        {
+            // Create the extended protrusion.
+            model = models.AddFiniteExtrudedProtrusion(
+              arrayToRef.Length,
+              ref arrayToRef,
+              SolidEdgePart.FeaturePropertyConstants.igRight,
+              extrude/1000,
+              Missing.Value,
+              Missing.Value,
+              Missing.Value,
+              Missing.Value);
+        }
+        public void GetAxis(SolidEdgeFrameworkSupport.Lines2d lines2DToAxis, SolidEdgePart.RefAxis axisToRef ,  SolidEdgePart.Profile profileToAxis)
+        {
+            int count = lines2DToAxis.Count;            
+            axisToRef = (SolidEdgePart.RefAxis)profileToAxis.SetAxisOfRevolution(
+                LineForAxis: lines2DToAxis.Item(count));
+        }
+        public void Revolve(SolidEdgePart.Models modelsToRef , System.Array arrayToRef, SolidEdgePart.RefAxis axisToRef)
+        {
+            //SolidEdgePart.Model modelToRef, System.Array arrayToRef, SolidEdgePart.RefAxis axisToRef
+            model = models.AddFiniteRevolvedProtrusion(
+                NumberOfProfiles:        1,
+                ProfileArray:            aProfiles,
+                ReferenceAxis:           axis,
+                ProfilePlaneSide:        SolidEdgePart.FeaturePropertyConstants.igRight,
+                AngleofRevolution:       2*Math.PI
+                );
+         }
+        public void Shaft(double diameter1, double lenght1, double diameter2, double lenght2, double diameter3, double lenght3)
+        {
+            double lenght_1 = lenght1 / 1000;
+            double lenght_2 = (lenght1 + lenght2) / 1000;
+            double lenght_3 = (lenght3 + lenght1 + lenght2) / 1000;
+
+            diameter1 = diameter1 / 2000;
+            diameter2 = diameter2 / 2000;
+            diameter3 = diameter3 / 2000;
+
+
+            List<string[]> csvDataList = Part_Creator.Form1.csvDataList;
+            double d1 = double.Parse(csvDataList[Part_Creator.Form1.atm1][0]) / 1000;
+            double s = double.Parse(csvDataList[Part_Creator.Form1.atm1][1]) / 1000;
+            double a = double.Parse(csvDataList[Part_Creator.Form1.atm1][2]) / 1000;
+            double b = double.Parse(csvDataList[Part_Creator.Form1.atm1][3]) / 1000;
+            double d2 = double.Parse(csvDataList[Part_Creator.Form1.atm1][4]) / 2000;
+            double m = double.Parse(csvDataList[Part_Creator.Form1.atm1][5]) / 1000;
+            double n = double.Parse(csvDataList[Part_Creator.Form1.atm1][6]) / 1000;
+
+            double d12 = double.Parse(csvDataList[Part_Creator.Form1.atm2][0]) / 1000;
+            double s2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][1]) / 1000;
+            double a2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][2]) / 1000;
+            double b2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][3]) / 1000;
+            double d22 = double.Parse(csvDataList[Part_Creator.Form1.atm2][4]) / 2000;
+            double m2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][5]) / 1000;
+            double n2 = double.Parse(csvDataList[Part_Creator.Form1.atm2][6]) / 1000;
+
+            double chamfer1 = Part_Creator.Form1.chamfer1 / 1000;
+            double chamfer2 = Part_Creator.Form1.chamfer2 / 1000;
+            List<double[]> coordinates = new List<double[]>();
+
+            coordinates.Add(new double[] { 0, 0, 0, diameter1 - chamfer1 });
+
+            coordinates.Add(new double[] { 0, diameter1 - chamfer1, chamfer1, diameter1 });
+            coordinates.Add(new double[] { chamfer1, diameter1, n, diameter1 }); // első letörés kész
+            coordinates.Add(new double[] { n, diameter1, n, d2 });
+            coordinates.Add(new double[] { n, d2, n + m, d2 });
+            coordinates.Add(new double[] { n + m, d2, n + m, diameter1 });
+            coordinates.Add(new double[] { n + m, diameter1, lenght_1, diameter1 });//első válll kész
+
+            coordinates.Add(new double[] { lenght_1, diameter1, lenght_1, diameter2 });
+            coordinates.Add(new double[] { lenght_1, diameter2, lenght_2, diameter2 });
+            coordinates.Add(new double[] { lenght_2, diameter2, lenght_2, diameter3 }); //második válll kész
+
+            coordinates.Add(new double[] { lenght_2, diameter3, lenght_3 - (n2 + m2), diameter3 });
+            coordinates.Add(new double[] { lenght_3 - (n2 + m2), diameter3, lenght_3 - (n2 + m2), d22 });
+            coordinates.Add(new double[] { lenght_3 - (n2 + m2), d22, lenght_3 - (n2), d22 });
+            coordinates.Add(new double[] { lenght_3 - (n2), d22, lenght_3 - (n2), diameter3 });
+            coordinates.Add(new double[] { lenght_3 - (n2), diameter3, lenght_3 - chamfer2, diameter3 });
+            coordinates.Add(new double[] { lenght_3 - chamfer2, diameter3, lenght_3, diameter3 - chamfer2 });
+            coordinates.Add(new double[] { lenght_3, diameter3 - chamfer2, lenght_3, 0 });//haramdik váll kész /második letörés kész
+
+            coordinates.Add(new double[] { lenght_3, 0, 00, 0 });
+
+            StartingData();
+
+            for (int i = 0; i < coordinates.Count; i++)
+                {
+                lines2d.AddBy2Points(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
+                }
+
+            CreatingRelations(relations2d,relation2d,profile);
+            GetAxis(lines2d,axis,profile);
+            CloseProfile(profile);
+            profile.Visible = true;
+            CreatingTheProfile(aProfiles, profile);
+            ModellReferenc(models,part);
+            Revolve(models,aProfiles,axis);
+            latch(0.02, 2, 2);
