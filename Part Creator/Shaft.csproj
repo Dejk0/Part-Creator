@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{796F70DC-17EC-4791-8B06-849ED9E20E65}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Part_Creator</RootNamespace>
-    <AssemblyName>Part Creator</AssemblyName>
+    <RootNamespace>Shaft</RootNamespace>
+    <AssemblyName>Shaft</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
