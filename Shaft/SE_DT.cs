@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using SolidEdgeFrameworkSupport;
 
 
 namespace Part_Creator
@@ -51,6 +52,8 @@ namespace Part_Creator
         public SolidEdgePart.RefAxes axes = null;
         public SolidEdgePart.RefAxis axis = null;
         public SolidEdgePart.Arcs3D arc3d = null;
+        SolidEdgeFrameworkSupport.Arc2d arc2d = null;
+        SolidEdgeFrameworkSupport.Arcs2d arcs2d = null;
         public float x_Coordinate;
         public float y_Coordinate;
         public float z_Coordinate;
@@ -263,8 +266,7 @@ namespace Part_Creator
             plane.Visible = false;
             profile3 = StartingData1(profile, 5, refplanes, profiles);
             lines2d = StartingData2(profile3, lines2d);          
-            latch2(20, 40, 8, 5.3, lenght_3-n2-m2-2.0/1000);
-            //model2.Rounds.Add(1, lines2d.Item(1), lines2d.Item(0) );
+            latch2(40, 8, 5.3, lenght_3-n2-m2-2.0/1000);
             profile2.Visible = false;
             profile3.Visible = false;
         }
@@ -292,68 +294,95 @@ namespace Part_Creator
 
         public void latch1(double atm, double b, double h1, double z, double shaftend)
         {
-           
+
             List<double[]> coordinates = new List<double[]>();
 
-            coordinates.Add(new double[] { shaftend, h1/2000, shaftend + b/1000, h1/2000 });
-            coordinates.Add(new double[] { shaftend + b / 1000, h1 / 2000, shaftend + b / 1000, -h1 / 2000 });
-            coordinates.Add(new double[] { shaftend + b / 1000, -h1 / 2000, shaftend, -h1 / 2000 });
-            coordinates.Add(new double[] { shaftend, -h1 / 2000, shaftend, h1 / 2000 });
+            coordinates.Add(new double[] { shaftend + h1 / 2000, h1 / 2000, shaftend + b / 1000 - h1 / 2000, h1 / 2000 });
+            coordinates.Add(new double[] { shaftend + b / 1000 - h1 / 2000, h1 / 2000, shaftend + b / 1000 - h1 / 2000, -h1 / 2000 });
+            coordinates.Add(new double[] { shaftend + b / 1000 - h1 / 2000, -h1 / 2000, shaftend + h1 / 2000, -h1 / 2000 });
+            coordinates.Add(new double[] { shaftend + h1 / 2000, -h1 / 2000, shaftend + h1 / 2000, h1 / 2000 });
 
-            for (int i = 0; i < coordinates.Count; i++)
+            arcs2d = profile2.Arcs2d;
+            for (int i = 0; i < coordinates.Count; i = i + 2)
             {
                 lines2d.AddBy2Points(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
             }
-
-            CreatingRelations(relations2d,relation2d,profile2);
-
+            for (int i = 1; i < coordinates.Count; i = i + 2)
+            {
+                arc2d = arcs2d.AddByCenterStartEnd(coordinates[i][2], 0, coordinates[i][2], coordinates[i][3], coordinates[i][0], coordinates[i][1]);
+            }
+            CreatingRelations3(relations2d, relation2d, profile2);
             profile2.End(SolidEdgePart.ProfileValidationType.igProfileClosed);
-
             bProfiles = Array.CreateInstance(typeof(SolidEdgePart.Profile), 1);
             bProfiles.SetValue(profile2, 0);
-
-
             extrudedCutouts = model.ExtrudedCutouts;
-
             extrudedCutouts.AddFinite(
                 Profile: profile2,
                 ProfileSide: SolidEdgePart.FeaturePropertyConstants.igRight,
                 ProfilePlaneSide: SolidEdgePart.FeaturePropertyConstants.igLeft,
-                Depth: z/1000
+                Depth: z / 1000
                 );
 
 
         }
-        public void latch2(double atm, double b, double h1, double z, double shaftend)
+        public void latch2(double b, double h1, double z, double shaftend)
         {
             List<double[]> coordinates = new List<double[]>();
-            coordinates.Add(new double[] { shaftend, h1 / 2000, shaftend - b / 1000, h1 / 2000 });
-            coordinates.Add(new double[] { shaftend - b / 1000, h1 / 2000, shaftend- b / 1000, -h1 / 2000 });
-            coordinates.Add(new double[] { shaftend  - b / 1000, - h1 / 2000, shaftend, -h1 / 2000 });
-            coordinates.Add(new double[] { shaftend, -h1 / 2000, shaftend, h1 / 2000 });
+            coordinates.Add(new double[] { shaftend - h1 / 2000, h1 / 2000, shaftend - b / 1000 + h1 / 2000, h1 / 2000 });
+            coordinates.Add(new double[] { shaftend - b / 1000 + h1 / 2000, h1 / 2000, shaftend - b / 1000 + h1 / 2000, -h1 / 2000 });
+            coordinates.Add(new double[] { shaftend - b / 1000 + h1 / 2000, -h1 / 2000, shaftend - h1 / 2000, -h1 / 2000 });
+            coordinates.Add(new double[] { shaftend - h1 / 2000, -h1 / 2000, shaftend - h1 / 2000, h1 / 2000 });
 
-            for (int i = 0; i < coordinates.Count; i++)
+            arcs2d = profile3.Arcs2d;
+            for (int i = 0; i < coordinates.Count; i = i + 2)
             {
                 lines2d.AddBy2Points(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
             }
+            for (int i = coordinates.Count - 1; i > 0; i = i - 2)
+            {
+                arc2d = arcs2d.AddByCenterStartEnd(coordinates[i][0], 0, coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
+            }
 
-            CreatingRelations(relations2d, relation2d, profile3);
-
+            CreatingRelations3(relations2d, relation2d, profile3);
             profile3.End(SolidEdgePart.ProfileValidationType.igProfileClosed);
-
             cProfiles = Array.CreateInstance(typeof(SolidEdgePart.Profile), 1);
             cProfiles.SetValue(profile3, 0);
-
-
             extrudedCutouts = model.ExtrudedCutouts;
-
             extrudedCutouts.AddFinite(
                 Profile: profile3,
-                ProfileSide: SolidEdgePart.FeaturePropertyConstants.igLeft,
+                ProfileSide: SolidEdgePart.FeaturePropertyConstants.igRight,
                 ProfilePlaneSide: SolidEdgePart.FeaturePropertyConstants.igLeft,
                 Depth: z / 1000
                 );
-
+        }
+        public void CreatingRelations3(SolidEdgeFrameworkSupport.Relations2d relations2dToCreat, SolidEdgeFrameworkSupport.Relation2d relation2dToCreat, SolidEdgePart.Profile profileForRelations)
+        {
+            relations2dToCreat = (SolidEdgeFrameworkSupport.Relations2d)
+              profileForRelations.Relations2d;
+            relation2dToCreat = relations2dToCreat.AddKeypoint(
+         lines2d.Item(1),
+         (int)KeypointIndexConstants.igLineStart,
+         arcs2d.Item(2),
+         (int)KeypointIndexConstants.igArcStart,
+         true);
+            relation2dToCreat = relations2dToCreat.AddKeypoint(
+             lines2d.Item(2),
+             (int)KeypointIndexConstants.igLineEnd,
+             arcs2d.Item(2),
+             (int)KeypointIndexConstants.igArcEnd,
+             true);
+            relation2dToCreat = relations2dToCreat.AddKeypoint(
+             lines2d.Item(2),
+             (int)KeypointIndexConstants.igLineStart,
+             arcs2d.Item(1),
+             (int)KeypointIndexConstants.igArcStart,
+             true);
+            relation2dToCreat = relations2dToCreat.AddKeypoint(
+             lines2d.Item(1),
+             (int)KeypointIndexConstants.igLineEnd,
+             arcs2d.Item(1),
+             (int)KeypointIndexConstants.igArcEnd,
+             true);
 
         }
     }
